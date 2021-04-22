@@ -1,4 +1,5 @@
 // https://crsaracco.github.io/amethyst-3d-tutorial/empty-game.html
+// Updated to work with Amethyst 0.15.3 by floyd@atc.no
 
 use amethyst::utils::application_root_dir;
 use amethyst::SimpleState;
@@ -14,6 +15,8 @@ use amethyst::renderer::Material;
 use amethyst::renderer::Mesh;
 use amethyst::renderer::MaterialDefaults;
 use amethyst::renderer::rendy::mesh::{Normal, Position, Tangent, TexCoord};
+use amethyst::renderer::light::{Light, PointLight};
+use amethyst::renderer::palette::rgb::Rgb;
 use amethyst::window::DisplayConfig;
 use amethyst::StateData;
 use amethyst::GameData;
@@ -24,11 +27,13 @@ use amethyst::assets::AssetLoaderSystemData;
 use amethyst::core::{Transform, TransformBundle};
 
 
+
 struct GameState;
 impl SimpleState for GameState {
     fn on_start(&mut self, state_data: StateData<'_, GameData<'_, '_>>) {
         initialize_camera(state_data.world);
         initialize_sphere(state_data.world);
+        initialize_light(state_data.world);
     }
 }
 
@@ -50,7 +55,7 @@ fn main() -> amethyst::Result<()> {
         ..Default::default()
     };
 
-    // Set up an empty (for now) GameDataBuilder
+    // Set up a minimal GameDataBuilder
     let game_data = GameDataBuilder::default()
     .with_bundle(TransformBundle::new())?
     .with_bundle(
@@ -75,7 +80,7 @@ fn initialize_camera(world: &mut World) {
     transform.set_translation_xyz(0.0, 0.0, 10.0);
 
     world.create_entity()
-        .with(Camera::standard_3d(1024.0, 768.0))
+        .with(Camera::standard_3d(640.0, 400.0))
         .with(transform)
         .build();
 }
@@ -108,6 +113,24 @@ fn initialize_sphere(world: &mut World) {
     world.create_entity()
         .with(mesh)
         .with(material)
+        .with(transform)
+        .build();
+}
+
+
+fn initialize_light(world: &mut World) {
+    let light: Light = PointLight {
+        intensity: 10.0,
+        color: Rgb::new(1.0, 1.0, 1.0),
+        ..PointLight::default()
+    }.into();
+
+    let mut transform = Transform::default();
+    transform.set_translation_xyz(5.0, 5.0, 20.0);
+
+    world
+        .create_entity()
+        .with(light)
         .with(transform)
         .build();
 }
