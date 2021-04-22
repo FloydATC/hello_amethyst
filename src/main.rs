@@ -100,8 +100,8 @@ impl<'s> System<'s> for MomentumSystem {
     );
 
     fn run(&mut self, (mut transforms, momentums, time): Self::SystemData) {
+        let t = time.delta_seconds();
         for (transform, momentum) in (&mut transforms, &momentums).join() {
-            let t = time.delta_seconds();
             let rotation = momentum.rotation();
             // Apply rotation, if any
             match (rotation.axis(), rotation.angle()) {
