@@ -11,6 +11,7 @@ use amethyst::renderer::RenderingBundle;
 use amethyst::renderer::shape::Shape;
 use amethyst::renderer::Camera;
 use amethyst::renderer::Material;
+use amethyst::renderer::Mesh;
 use amethyst::renderer::MaterialDefaults;
 use amethyst::renderer::rendy::mesh::{Normal, Position, Tangent, TexCoord};
 use amethyst::window::DisplayConfig;
